@@ -1,0 +1,36 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liatrio-app
+  labels:
+    app: liatrio-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: liatrio-app
+  template:
+    metadata:
+      labels:
+        app: liatrio-app
+    spec:
+      containers:
+      - name: liatrio-app
+        image: genedemo/flaskapp:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: liatrio-app
+  namespace: default
+spec:
+  selector:
+    app: liatrio-app
+  type: LoadBalancer
+  ports:
+  - name: http
+    targetPort: 5000
+    port: 80
